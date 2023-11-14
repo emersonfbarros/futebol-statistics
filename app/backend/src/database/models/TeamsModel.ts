@@ -1,9 +1,6 @@
 import {
-  DataTypes,
-  Model,
-  InferAttributes,
-  InferCreationAttributes,
-  CreationOptional,
+  CreationOptional, DataTypes, InferAttributes,
+  InferCreationAttributes, Model,
 } from 'sequelize';
 import db from '.';
 
