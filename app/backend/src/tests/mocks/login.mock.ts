@@ -19,4 +19,23 @@ const empty = [
   },
 ];
 
-export default { empty };
+const invalid = [
+  {
+    email: 'test',
+    password: 'pih29'
+  },
+  {
+    email: 'test@',
+    password: '0192l&^d8123yrf'
+  },
+  {
+    email: 'test@mocha.com',
+    password: '09hl4'
+  },
+  {
+    email: '@mocha.com',
+    password: 'f4524h7l628ggfds'
+  },
+];
+
+export default { empty, invalid };
