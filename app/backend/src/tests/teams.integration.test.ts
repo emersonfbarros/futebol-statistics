@@ -32,12 +32,30 @@ describe('App', function() {
     expect(body).to.be.deep.equal(firstTeam);
   });
 
+  it('get "/teams/:invalidId" route should return not found message with http status 404', async function() {
+    sinon.stub(TeamsModel, 'findByPk').resolves(null);
+    const { status, body } = await request(app).get('/teams/20');
+    expect(status).to.be.equal(mock.httpStatus.notFound);
+    expect(body).to.be.deep.equal({ message: 'Team not found' });
+  });
+
   it(
     'get "/teams" should return message error with http status 500 if connection with db fails',
     async function() {
       sinon.stub(TeamsModel, 'findAll')
         .throws(new Error('Database connection failed'));
       const { status, body } = await request(app).get('/teams');
+      expect(status).to.be.equal(mock.httpStatus.serverError);
+      expect(body).to.be.deep.equal(mock.serverErrorMessage);
+    },
+  );
+
+  it(
+    'get "/teams/:someId" should return message error with http status 500 if connection with db fails',
+    async function() {
+      sinon.stub(TeamsModel, 'findByPk')
+        .throws(new Error('Database connection failed'));
+      const { status, body } = await request(app).get('/teams/8');
       expect(status).to.be.equal(mock.httpStatus.serverError);
       expect(body).to.be.deep.equal(mock.serverErrorMessage);
     },
