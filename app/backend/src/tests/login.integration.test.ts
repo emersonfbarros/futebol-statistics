@@ -36,4 +36,15 @@ describe('App', function() {
       });
     },
   );
+
+  it(
+    'GET "/login/role" without token in authorization header should return error message with http code 401',
+    async function() {
+      const { status, body } = await request(app)
+        .get('/login/role')
+        .set('authorization', 'Bearer ');
+      expect(status).to.be.equal(mock.httpStatus.unauthorized);
+      expect(body).to.be.deep.equal({ message: 'Token not found' });
+    },
+  );
 })
