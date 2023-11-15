@@ -1,6 +1,7 @@
 import * as express from 'express';
 import 'express-async-errors';
 import MainRouter from './routes';
+import Defaults from './utils/Defaults';
 
 class App {
   public app: express.Express;
@@ -43,7 +44,9 @@ class App {
         _next: express.NextFunction,
       ) => {
         console.error(error.stack);
-        res.status(500).json({ message: 'Internal server error' });
+        res
+          .status(Defaults.getHttpCode('SERVER_ERROR'))
+          .json({ message: 'Internal server error' });
       },
     );
   }
