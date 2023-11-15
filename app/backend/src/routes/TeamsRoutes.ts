@@ -18,6 +18,12 @@ export default class TeamsRoutes {
       (req: Request, res: Response) =>
         this.teamsController.getAllTeams(req, res),
     );
+
+    this.router.get(
+      '/:id',
+      (req: Request, res: Response) =>
+        this.teamsController.getTeamById(req, res),
+    );
   }
 
   public getRouter() {

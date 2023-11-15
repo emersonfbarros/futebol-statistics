@@ -7,6 +7,8 @@ export default class Defaults {
         return 200;
       case 'SERVER_ERROR':
         return 500;
+      case 'NOT_FOUND':
+        return 404;
       default:
         throw new Error(`Invalid status: ${status}`);
     }
