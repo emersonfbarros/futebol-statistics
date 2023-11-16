@@ -1,5 +1,6 @@
 import * as chai from 'chai';
 import * as sinon from 'sinon';
+import jwt, { Secret } from 'jsonwebtoken';
 import { app } from '../app';
 import UserModel from '../database/models/UsersModel';
 import mock from './mocks';
@@ -56,6 +57,32 @@ describe('App', function() {
         .set('authorization', `Bearer ${mock.login.invalidToken}`);
       expect(status).to.be.equal(mock.httpStatus.unauthorized);
       expect(body).to.be.deep.equal({ message: 'Token must be a valid token' });
+    },
+  );
+
+  it(
+    'POST "/login" with valid email and password found in db should retun a token with http code 200',
+    async function() {
+      const { id, username, role, email, password, rawPassword } = mock.login.userOnDb;
+      const mockUserFound = UserModel.build({ id, username, role, email, password });
+
+      const jwtSignStub = (sinon.stub(jwt, 'sign') as unknown as sinon.SinonStub<
+        [{ id: number }, Secret],
+        string
+      >).returns(mock.login.validToken);
+      sinon.stub(UserModel, 'findOne').resolves(mockUserFound);
+
+      const { status, body } = await request(app)
+        .post('/login')
+        .send({ email, password: rawPassword });
+
+      const jwtSignArgs = jwtSignStub.getCall(0).args;
+
+      expect(status).to.be.equal(mock.httpStatus.successful);
+      expect(jwtSignArgs[0]).to.be.deep.equal({ id });
+      expect(jwtSignArgs[1]).to.be.a('string');
+      expect(body).to.be.have.property('token');
+      expect(body.token).to.be.a('string');
     },
   );
 })

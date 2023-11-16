@@ -38,7 +38,19 @@ const invalid = [
   },
 ];
 
+const userOnDb = {
+  id: 208,
+  username: 'mochaTest',
+  role: 'admin',
+  email: 'test@mocha.com',
+  password: '$2a$05$oTgEY.qcJQHphSKWcZdar.KPxRhnDTK1V5UOSbPY9T4S4557ZhHEC',
+  rawPassword: 'as#dF8U7_;+',
+};
+
 const invalidToken =
   'eyJhbGciOiJIUzInR5cCI6IkpXVCJ9.eyJpZCI6MjA4LQiOjE1MTYyMzkwMjJ9.Aa1qtzkWeUwXclGcgIpHLSITA1sVhwQL29RVM';
 
-export default { empty, invalid, invalidToken };
+const validToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA4LCJpYXQiOjE1MTYyMzkwMjJ9.Aa1qtzkWeUwXclGcgIpHLSITA1s1TYVxHFhwQL29RVM';
+
+export default { empty, invalid, invalidToken, userOnDb, validToken };
