@@ -117,4 +117,21 @@ describe('App', function() {
       expect(body).to.be.deep.equal({ token: mock.login.validToken });
     },
   );
+
+  it(
+    'GET "/login/role" with valid email and password found in db should retun user role with http code 200',
+    async function() {
+      const { id, username, role, email, password } = mock.login.userOnDb;
+      const mockUserFound = UserModel.build({ id, username, role, email, password });
+
+      sinon.stub(UserModel, 'findByPk').resolves(mockUserFound);
+
+      const { status, body } = await request(app)
+        .get('/login/role')
+        .set('authorization', `Bearer ${mock.login.validToken}`)
+
+      expect(status).to.be.equal(mock.httpStatus.successful);
+      expect(body).to.be.deep.equal({ role });
+    },
+  );
 })
