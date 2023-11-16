@@ -81,8 +81,7 @@ describe('App', function() {
       expect(status).to.be.equal(mock.httpStatus.successful);
       expect(jwtSignArgs[0]).to.be.deep.equal({ id });
       expect(jwtSignArgs[1]).to.be.a('string');
-      expect(body).to.be.have.property('token');
-      expect(body.token).to.be.a('string');
+      expect(body).to.be.deep.equal({ token: mock.login.validToken });
     },
   );
 })
