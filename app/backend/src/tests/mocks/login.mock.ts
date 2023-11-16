@@ -38,4 +38,6 @@ const invalid = [
   },
 ];
 
-export default { empty, invalid };
+const invalidToken = 'eyJhbGciOiJIUzInR5cCI6IkpXVCJ9.eyJpZCI6MjA4LQiOjE1MTYyMzkwMjJ9.Aa1qtzkWeUwXclGcgIpHLSITA1sVhwQL29RVM';
+
+export default { empty, invalid, invalidToken };
