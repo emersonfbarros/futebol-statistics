@@ -56,6 +56,22 @@ describe('App', function() {
   );
 
   it(
+    'POST "/login" with valid password and valid email but not found in db should return error message with http code 401',
+    async function() {
+      const { email, password } = mock.login.userOnDb;
+
+      sinon.stub(UserModel, 'findOne').resolves(null);
+
+      const { status, body } = await request(app)
+        .post('/login')
+        .send({ email, password });
+
+      expect(status).to.be.equal(mock.httpStatus.unauthorized);
+      expect(body).to.be.deep.equal({ message: 'Invalid email or password' });
+    },
+  );
+
+  it(
     'GET "/login/role" without token in authorization header should return error message with http code 401',
     async function() {
       const { status, body } = await request(app)
