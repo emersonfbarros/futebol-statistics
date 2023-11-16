@@ -22,22 +22,23 @@ const empty = [
 const invalid = [
   {
     email: 'test',
-    password: 'pih29'
+    password: 'pih29',
   },
   {
     email: 'test@',
-    password: '0192l&^d8123yrf'
+    password: '0192l&^d8123yrf',
   },
   {
     email: 'test@mocha.com',
-    password: '09hl4'
+    password: '09hl4',
   },
   {
     email: '@mocha.com',
-    password: 'f4524h7l628ggfds'
+    password: 'f4524h7l628ggfds',
   },
 ];
 
-const invalidToken = 'eyJhbGciOiJIUzInR5cCI6IkpXVCJ9.eyJpZCI6MjA4LQiOjE1MTYyMzkwMjJ9.Aa1qtzkWeUwXclGcgIpHLSITA1sVhwQL29RVM';
+const invalidToken =
+  'eyJhbGciOiJIUzInR5cCI6IkpXVCJ9.eyJpZCI6MjA4LQiOjE1MTYyMzkwMjJ9.Aa1qtzkWeUwXclGcgIpHLSITA1sVhwQL29RVM';
 
 export default { empty, invalid, invalidToken };
