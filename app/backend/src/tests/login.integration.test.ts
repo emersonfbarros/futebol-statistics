@@ -73,10 +73,26 @@ describe('App', function () {
     expect(body).to.be.deep.equal({ message: 'Token not found' });
   });
 
-  it('GET "/login/role" without invalid token in authorization header should return error message with http code 401', async function () {
+  it('GET "/login/role" with nothing in authorization header should return error message with http code 401', async function () {
+    const { status, body } = await request(app)
+      .get('/login/role')
+      .set('authorization', '');
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: 'Token not found' });
+  });
+
+  it('GET "/login/role" with invalid token in authorization header should return error message with http code 401', async function () {
     const { status, body } = await request(app)
       .get('/login/role')
       .set('authorization', `Bearer ${mock.login.invalidToken}`);
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: 'Token must be a valid token' });
+  });
+
+  it('GET "/login/role" with non sense data in authorization header should return error message with http code 401', async function () {
+    const { status, body } = await request(app)
+      .get('/login/role')
+      .set('authorization', 'token');
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
     expect(body).to.be.deep.equal({ message: 'Token must be a valid token' });
   });
