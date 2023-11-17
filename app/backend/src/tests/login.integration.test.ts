@@ -17,19 +17,19 @@ describe('App', function () {
   });
 
   it('POST "/login" with empty password or email should return error message with http code 400', async function () {
-    mock.login.empty.forEach(async (input) => {
+    for (const input of mock.login.empty) {
       const { status, body } = await request(app).post('/login').send(input);
       expect(status).to.be.equal(mock.httpStatus.badReq);
       expect(body).to.be.deep.equal({ message: 'All fields must be filled' });
-    });
+    }
   });
 
   it('POST "/login" with invalid password or email should return error message with http code 401', async function () {
-    mock.login.invalid.forEach(async (input) => {
+    for (const input of mock.login.invalid) {
       const { status, body } = await request(app).post('/login').send(input);
       expect(status).to.be.equal(mock.httpStatus.unauthorized);
       expect(body).to.be.deep.equal({ message: 'Invalid email or password' });
-    });
+    }
   });
 
   it('POST "/login" with valid password, but incorrect, and valid email found in db should return error message with http code 401', async function () {
