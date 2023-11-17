@@ -1,5 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
+import { TokenPayload } from '../types/TokenPayload';
 
 export default class AuthManager {
   private static instance: AuthManager;
@@ -16,12 +17,12 @@ export default class AuthManager {
     return AuthManager.instance;
   }
 
-  public createToken(payload: object): string {
+  public createToken(payload: TokenPayload): string {
     return jwt.sign(payload, this.secret);
   }
 
-  public verifyToken(token: string): object {
-    return jwt.verify(token, this.secret) as object;
+  public verifyToken(token: string): TokenPayload {
+    return jwt.verify(token, this.secret) as TokenPayload;
   }
 
   public static comparePassword(password: string, hash: string): boolean {
