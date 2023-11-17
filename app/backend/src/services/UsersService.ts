@@ -1,4 +1,5 @@
 import AuthManager from '../auth/AuthManager';
+import IUser from '../Interfaces/user/IUser';
 import UsersModel from '../models/UserModel';
 import { LoginData } from '../types/LoginData';
 import { ServiceResponse } from '../types/ServiceResponse';
@@ -19,5 +20,10 @@ export default class UsersService {
     }
     const token = AuthManager.getInstance().createToken({ id: user.id });
     return { status: 'SUCCESSFUL', data: { token } };
+  }
+
+  public async role(id: number): Promise<ServiceResponse<{ role: string }>> {
+    const user = await this.usersModel.findById(id) as IUser;
+    return { status: 'SUCCESSFUL', data: { role: user.role } };
   }
 }

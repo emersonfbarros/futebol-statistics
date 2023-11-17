@@ -12,7 +12,6 @@ export default class UsersController {
   }
 
   public async role(_req: Request, res: Response) {
-    console.log(res.locals.id);
     const { status, data } = await this.usersService.role(Number(res.locals.id));
     res.status(Defaults.getHttpCode(status)).json(data);
   }

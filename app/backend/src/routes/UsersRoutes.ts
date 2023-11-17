@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import UsersController from '../controllers/UsersController';
 import ValidateLoginData from '../middlewares/LoginDataValidation';
+import TokenValidation from '../middlewares/TokenValidation';
 
 export default class UsersRoutes {
   private router: Router;
@@ -19,6 +20,13 @@ export default class UsersRoutes {
       ValidateLoginData.validateData,
       (req: Request, res: Response) =>
         this.usersController.login(req, res),
+    );
+
+    this.router.get(
+      '/role',
+      TokenValidation.validate,
+      (req: Request, res: Response) =>
+        this.usersController.role(req, res),
     );
   }
 
