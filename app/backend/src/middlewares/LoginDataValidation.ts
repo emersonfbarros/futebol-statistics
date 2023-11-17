@@ -14,7 +14,11 @@ export default class ValidateLoginData {
     );
     if (error) {
       const { message } = error.details[0];
-      return res.status(Defaults.getHttpCode('BAD_REQ')).json({ message });
+      return res
+        .status(Defaults.getHttpCode(
+          message === 'Invalid email or password' ? 'UNAUTHORIZED' : 'BAD_REQ',
+        ))
+        .json({ message });
     }
     return next();
   }
