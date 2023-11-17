@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import * as sinon from 'sinon';
-import { app } from '../src/app';
-import TeamsModel from '../src/database/models/TeamsModel';
+import { app } from '../app';
+import TeamsModel from '../database/models/TeamsModel';
 import mock from './mocks';
 // @ts-ignore
 import chaiHttp = require('chai-http');

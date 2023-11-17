@@ -1,8 +1,8 @@
 import * as chai from 'chai';
 import * as sinon from 'sinon';
-import jwt, { Secret } from 'jsonwebtoken';
-import { app } from '../src/app';
-import UserModel from '../src/database/models/UsersModel';
+import * as jwt from 'jsonwebtoken';
+import { app } from '../app';
+import UserModel from '../database/models/UsersModel';
 import mock from './mocks';
 // @ts-ignore
 import chaiHttp = require('chai-http');
@@ -94,7 +94,7 @@ describe('App', function () {
 
     const jwtSignStub = (
       sinon.stub(jwt, 'sign') as unknown as sinon.SinonStub<
-        [{ id: number }, Secret],
+        [{ id: number }, jwt.Secret],
         string
       >
     ).returns(mock.login.validToken);
