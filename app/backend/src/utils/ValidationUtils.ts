@@ -11,8 +11,8 @@ export default class ValidationUtils {
       .messages({
         'any.required': 'All fields must be filled',
         'any.empty': 'All fields must be filled',
-        'any.email': 'Invalid email or password',
-        'any.min': 'Invalid email or password',
+        'string.email': 'Invalid email or password',
+        'string.min': 'Invalid email or password',
       });
     return schema.validate(data);
   }
