@@ -11,6 +11,8 @@ export default class Defaults {
         return 404;
       case 'UNAUTHORIZED':
         return 401;
+      case 'BAD_REQ':
+        return 400;
       default:
         throw new Error(`Invalid status: ${status}`);
     }

@@ -4,7 +4,8 @@ export type ServiceResponseStatus =
   | 'SUCCESSFUL'
   | 'SERVER_ERROR'
   | 'NOT_FOUND'
-  | 'UNAUTHORIZED';
+  | 'UNAUTHORIZED'
+  | 'BAD_REQ';
 
 export type ServiceResponse<T> = {
   status: ServiceResponseStatus;
