@@ -14,7 +14,7 @@ export default class ValidateLoginData {
     );
     if (error) {
       const { message } = error.details[0];
-      return res.status(Defaults.getHttpCode('UNAUTHORIZED')).json({ message });
+      return res.status(Defaults.getHttpCode('BAD_REQ')).json({ message });
     }
     return next();
   }
