@@ -7,7 +7,7 @@ export default class UsersService {
   private usersModel = new UsersModel();
 
   public async login({ email, password }: LoginData): Promise<
-    ServiceResponse<{ token: string }>
+  ServiceResponse<{ token: string }>
   > {
     const user = await this.usersModel.findByEmail(email);
     if (!user) {
