@@ -1,26 +1,25 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import AuthManager from '../auth/AuthManager';
-import RequestWithUser from '../Interfaces/RequestWithUser';
 import Defaults from '../utils/Defaults';
 
 export default class TokenValidation {
-  static validate(req: RequestWithUser, res: Response, next: NextFunction): Response | void {
+  static validate(req: Request, res: Response, next: NextFunction): Response | void {
     const message = 'Token not found';
+    const unauth = Defaults.getHttpCode('UNAUTHORIZED');
     const { authorization } = req.headers;
-    if (!authorization) {
-      return res.status(Defaults.getHttpCode('UNAUTHORIZED')).json({ message });
+    if (!authorization) return res.status(unauth).json({ message });
+    if (authorization.slice(0, 6) !== 'Bearer') {
+      return res.status(unauth).json({ message: 'Token must be a valid token' });
     }
     const token = authorization.slice(7);
-    if (!token) {
-      return res.status(Defaults.getHttpCode('UNAUTHORIZED')).json({ message });
-    }
+    if (!token) return res.status(unauth).json({ message });
     try {
-      req.user = AuthManager.getInstance().verifyToken(token);
+      res.locals.id = AuthManager.getInstance().verifyToken(token).id;
       next();
     } catch (error) {
       console.error(error);
       return res
-        .status(Defaults.getHttpCode('UNAUTHORIZED'))
+        .status(unauth)
         .json({ message: 'Token must be a valid token' });
     }
   }
