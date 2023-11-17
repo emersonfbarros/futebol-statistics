@@ -1,4 +1,4 @@
-import { ServiceResponseStatus } from '../Interfaces/service/ServiceResponse';
+import { ServiceResponseStatus } from '../types/ServiceResponse';
 
 export default class Defaults {
   static getHttpCode(status: ServiceResponseStatus): number {
@@ -9,6 +9,8 @@ export default class Defaults {
         return 500;
       case 'NOT_FOUND':
         return 404;
+      case 'UNAUTHORIZED':
+        return 401;
       default:
         throw new Error(`Invalid status: ${status}`);
     }
