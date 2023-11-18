@@ -199,4 +199,14 @@ describe('App', function () {
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
     expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
   });
+
+  it('POST "/matches" with non sense data in authorization header should return message error', async function () {
+    const { status, body } = await request(app)
+      .post('/matches')
+      .set('authorization', 'token')
+      .send(mock.matches.matchToCreate);
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: invalidTokenMessage });
+  });
 });
