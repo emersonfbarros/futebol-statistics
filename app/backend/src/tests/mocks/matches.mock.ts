@@ -106,9 +106,15 @@ const matchToEnd = {
   },
 };
 
+const scoreboardToUpdate = {
+  homeTeamGoals: 3,
+  awayTeamGoals: 1,
+};
+
 export default {
   allMatches,
   inProgressMatches,
   finishedMatches,
   matchToEnd,
+  scoreboardToUpdate,
 };

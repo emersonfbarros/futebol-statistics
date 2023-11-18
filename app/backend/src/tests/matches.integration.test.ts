@@ -90,4 +90,48 @@ describe('App', function () {
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
     expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
   });
+
+  it('PATCH "/matches/:validId" with valid token should update the scoreboard', async function () {
+    const matchToEndMock = MatchesModel.build(mock.matches.matchToEnd);
+
+    sinon.stub(MatchesModel, 'findOne').resolves(matchToEndMock);
+
+    const { status, body } = await request(app)
+      .patch('/matches/1')
+      .set('authorization', `Bearer ${mock.login.validToken}`)
+      .send(mock.matches.scoreboardToUpdate);
+
+    expect(status).to.be.equal(mock.httpStatus.successful);
+    expect(body).to.be.deep.equal({});
+  });
+
+  it('PATCH "/matches/:validId" with ivalid token should return error message', async function () {
+    const { status, body } = await request(app)
+      .patch('/matches/1')
+      .set('authorization', `Bearer ${mock.login.validToken}`)
+      .send(mock.matches.scoreboardToUpdate);
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: invalidTokenMessage });
+  });
+
+  it('PATCH "/matches/:validId" without token should return message error', async function () {
+    const { status, body } = await request(app)
+      .patch('/matches/1')
+      .set('authorization', 'Bearer')
+      .send(mock.matches.scoreboardToUpdate);
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
+  });
+
+  it('PATCH "/matches/:validId" with non sense data in authorization header should return message error', async function () {
+    const { status, body } = await request(app)
+      .patch('/matches/1')
+      .set('authorization', 'token')
+      .send(mock.matches.scoreboardToUpdate);
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
+  });
 });
