@@ -64,7 +64,7 @@ describe('App', function () {
     expect(body).to.be.deep.equal({ message: 'Finished' });
   });
 
-  it('PATCH "/matches/:validId/finish" with invalid token should message informing that match has been completed', async function () {
+  it('PATCH "/matches/:validId/finish" with invalid token should return message error', async function () {
     const { status, body } = await request(app)
       .patch('/matches/1/finish')
       .set('authorization', `Bearer ${mock.login.invalidToken}`);
@@ -73,7 +73,7 @@ describe('App', function () {
     expect(body).to.be.deep.equal({ message: invalidTokenMessage });
   });
 
-  it('PATCH "/matches/:validId/finish" without token should message informing that match has been completed', async function () {
+  it('PATCH "/matches/:validId/finish" without token should return message error', async function () {
     const { status, body } = await request(app)
       .patch('/matches/1/finish')
       .set('authorization', 'Bearer');
@@ -82,7 +82,7 @@ describe('App', function () {
     expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
   });
 
-  it('PATCH "/matches/:validId/finish" with non sense data in authorization header should message informing that match has been completed', async function () {
+  it('PATCH "/matches/:validId/finish" with non sense data in authorization header should return message error', async function () {
     const { status, body } = await request(app)
       .patch('/matches/1/finish')
       .set('authorization', 'token');
