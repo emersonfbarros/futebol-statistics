@@ -88,7 +88,7 @@ describe('App', function () {
       .set('authorization', 'token');
 
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
-    expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
+    expect(body).to.be.deep.equal({ message: invalidTokenMessage });
   });
 
   it('PATCH "/matches/:validId" with valid token should update the scoreboard', async function () {
@@ -132,6 +132,6 @@ describe('App', function () {
       .send(mock.matches.scoreboardToUpdate);
 
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
-    expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
+    expect(body).to.be.deep.equal({ message: invalidTokenMessage });
   });
 });
