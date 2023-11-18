@@ -117,6 +117,14 @@ const matchToCreate = {
   homeTeamGoals: 2,
   awayTeamGoals: 2,
 };
+
+const invalidMatchToCreate = {
+  homeTeamId: 8,
+  awayTeamId: 8,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2,
+};
+
 export default {
   allMatches,
   inProgressMatches,
@@ -124,4 +132,5 @@ export default {
   matchToEnd,
   scoreboardToUpdate,
   matchToCreate,
+  invalidMatchToCreate,
 };

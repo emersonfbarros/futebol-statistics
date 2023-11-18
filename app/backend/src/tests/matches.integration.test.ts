@@ -2,9 +2,11 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import { app } from '../app';
 import MatchesModel from '../database/models/MatchesModel';
+import TeamsModel from '../database/models/TeamsModel'
 import mock from './mocks';
 // @ts-ignore
 import chaiHttp = require('chai-http');
+import mocks from './mocks';
 
 chai.use(chaiHttp);
 
@@ -154,5 +156,14 @@ describe('App', function () {
       .send(mock.matches.matchToCreate);
     expect(status).to.be.equal(mock.httpStatus.created);
     expect(body).to.be.deep.equal(fullToCreate);
+  });
+
+  it('POST "/matches" with body with teams that have same id in the request should return error message', async function () {
+    const { status, body } = await request(app)
+      .post('/matches')
+      .set('authorization', `Bearer ${mock.login.validToken}`)
+      .send(mock.matches.invalidMatchToCreate);
+    expect(status).to.be.equal(mock.httpStatus.unprocessable);
+    expect(body).to.be.deep.equal({ message: 'It is not possible to create a match with two equal teams' });
   });
 });
