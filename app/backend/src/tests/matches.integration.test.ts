@@ -22,7 +22,8 @@ describe('App', function () {
 
   it('GET "/matches" should return all matches with no filters', async function () {
 
-    sinon.stub(SequelizeMatches, 'findAll').resolves(mock.matches.allMatches as unknown as SequelizeMatches[]);
+    sinon.stub(SequelizeMatches, 'findAll')
+      .resolves(mock.matches.allMatches as unknown as SequelizeMatches[]);
 
     const { status, body } = await request(app).get('/matches');
 
