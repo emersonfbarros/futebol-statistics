@@ -53,7 +53,6 @@ describe('App', function () {
 
   it('PATCH "/matches/:validId/finish" with valid token should message informing that match has been completed', async function () {
     const matchToEndMock = MatchesModel.build(mock.matches.matchToEnd);
-    const matchEnded = { ...mock.matches.matchToEnd, inProgress: false };
 
     sinon.stub(MatchesModel, 'findOne').resolves(matchToEndMock);
 
@@ -62,7 +61,7 @@ describe('App', function () {
       .set('authorization', `Bearer ${mock.login.validToken}`);
 
     expect(status).to.be.equal(mock.httpStatus.successful);
-    expect(body).to.be.deep.equal(matchEnded);
+    expect(body).to.be.deep.equal({ message: 'Finished' });
   });
 
   it('PATCH "/matches/:validId/finish" with invalid token should message informing that match has been completed', async function () {
