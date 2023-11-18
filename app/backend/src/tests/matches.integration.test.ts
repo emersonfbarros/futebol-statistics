@@ -179,4 +179,14 @@ describe('App', function () {
     expect(status).to.be.equal(mock.httpStatus.unprocessable);
     expect(body).to.be.deep.equal({ message: 'It is not possible to create a match with two equal teams' });
   });
+
+  it('POST "/matches" with invalid token should return error message', async function () {
+    const { status, body } = await request(app)
+      .patch('/matches')
+      .set('authorization', `Bearer ${mock.login.invalidToken}`)
+      .send(mock.matches.matchToCreate);
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: invalidTokenMessage });
+  });
 });
