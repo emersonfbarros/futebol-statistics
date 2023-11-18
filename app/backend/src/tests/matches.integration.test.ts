@@ -189,4 +189,14 @@ describe('App', function () {
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
     expect(body).to.be.deep.equal({ message: invalidTokenMessage });
   });
+
+  it('POST "/matches" without token should return message error', async function () {
+    const { status, body } = await request(app)
+      .post('/matches')
+      .set('authorization', 'Bearer')
+      .send(mock.matches.matchToCreate);
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
+  });
 });
