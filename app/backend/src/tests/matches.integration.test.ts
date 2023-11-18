@@ -107,10 +107,10 @@ describe('App', function () {
     expect(body).to.be.deep.equal({});
   });
 
-  it('PATCH "/matches/:validId" with ivalid token should return error message', async function () {
+  it('PATCH "/matches/:validId" with invalid token should return error message', async function () {
     const { status, body } = await request(app)
       .patch('/matches/1')
-      .set('authorization', `Bearer ${mock.login.validToken}`)
+      .set('authorization', `Bearer ${mock.login.invalidToken}`)
       .send(mock.matches.scoreboardToUpdate);
 
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
