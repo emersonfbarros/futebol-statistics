@@ -11,6 +11,9 @@ chai.use(chaiHttp);
 const { expect, request } = chai;
 
 describe('App', function () {
+  const invalidTokenMessage = 'Token must be a valid token';
+  const notFoundTokenMessage = 'Token not found';
+
   afterEach(function () {
     sinon.restore();
   });
@@ -46,5 +49,46 @@ describe('App', function () {
 
     expect(status).to.be.equal(mock.httpStatus.successful);
     expect(body).to.be.deep.equal(mock.matches.finishedMatches);
+  });
+
+  it('PATCH "/matches/:validId/finish" with valid token should message informing that match has been completed', async function () {
+    const matchToEndMock = MatchesModel.build(mock.matches.matchToEnd);
+    const matchEnded = { ...mock.matches.matchToEnd, inProgress: false };
+
+    sinon.stub(MatchesModel, 'findOne').resolves(matchToEndMock);
+
+    const { status, body } = await request(app)
+      .patch('/matches/1/finish')
+      .set('authorization', `Bearer ${mock.login.validToken}`);
+
+    expect(status).to.be.equal(mock.httpStatus.successful);
+    expect(body).to.be.deep.equal(matchEnded);
+  });
+
+  it('PATCH "/matches/:validId/finish" with invalid token should message informing that match has been completed', async function () {
+    const { status, body } = await request(app)
+      .patch('/matches/1/finish')
+      .set('authorization', `Bearer ${mock.login.invalidToken}`);
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: invalidTokenMessage });
+  });
+
+  it('PATCH "/matches/:validId/finish" without token should message informing that match has been completed', async function () {
+    const { status, body } = await request(app)
+      .patch('/matches/1/finish')
+      .set('authorization', 'Bearer');
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
+  });
+
+  it('PATCH "/matches/:validId/finish" with non sense data in authorization header should message informing that match has been completed', async function () {
+    const { status, body } = await request(app)
+      .patch('/matches/1/finish')
+      .set('authorization', 'token');
+
+    expect(status).to.be.equal(mock.httpStatus.unauthorized);
+    expect(body).to.be.deep.equal({ message: notFoundTokenMessage });
   });
 });
