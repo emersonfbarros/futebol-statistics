@@ -23,7 +23,7 @@ describe('App', function () {
     const { status, body } = await request(app).get('/matches');
 
     expect(status).to.be.equal(mock.httpStatus.successful);
-    expect(body).to.be.deep.equal(allMatchesMock);
+    expect(body).to.be.deep.equal(mock.matches.allMatches);
   });
 
   it('GET "/matches?inProgress=true" should return all matches in progress', async function () {
@@ -34,7 +34,7 @@ describe('App', function () {
     const { status, body } = await request(app).get('/matches?inProgress=true');
 
     expect(status).to.be.equal(mock.httpStatus.successful);
-    expect(body).to.be.deep.equal(inProgressMatchesMock);
+    expect(body).to.be.deep.equal(mock.matches.inProgressMatches);
   });
 
   it('GET "/matches?inProgress=false" should return all matches in progress', async function () {
@@ -45,6 +45,6 @@ describe('App', function () {
     const { status, body } = await request(app).get('/matches?inProgress=true');
 
     expect(status).to.be.equal(mock.httpStatus.successful);
-    expect(body).to.be.deep.equal(finishedMatchesMock);
+    expect(body).to.be.deep.equal(mock.matches.finishedMatches);
   });
 });
