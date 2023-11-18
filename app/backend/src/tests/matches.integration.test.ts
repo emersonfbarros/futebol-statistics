@@ -36,4 +36,15 @@ describe('App', function () {
     expect(status).to.be.equal(mock.httpStatus.successful);
     expect(body).to.be.deep.equal(inProgressMatchesMock);
   });
+
+  it('GET "/matches?inProgress=false" should return all matches in progress', async function () {
+    const finishedMatchesMock = MatchesModel.bulkBuild(mock.matches.finishedMatches);
+
+    sinon.stub(MatchesModel, 'findAll').resolves(finishedMatchesMock);
+
+    const { status, body } = await request(app).get('/matches?inProgress=true');
+
+    expect(status).to.be.equal(mock.httpStatus.successful);
+    expect(body).to.be.deep.equal(finishedMatchesMock);
+  });
 });
