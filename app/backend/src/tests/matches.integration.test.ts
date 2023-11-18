@@ -1,8 +1,8 @@
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import { app } from '../app';
-import MatchesModel from '../database/models/MatchesModel';
-import TeamsModel from '../database/models/TeamsModel'
+import SequelizeMatches from '../database/models/MatchesModel';
+import SequelizeTeams from '../database/models/TeamsModel'
 import mock from './mocks';
 // @ts-ignore
 import chaiHttp = require('chai-http');
@@ -21,9 +21,8 @@ describe('App', function () {
   });
 
   it('GET "/matches" should return all matches with no filters', async function () {
-    const allMatchesMock = MatchesModel.bulkBuild(mock.matches.allMatches);
 
-    sinon.stub(MatchesModel, 'findAll').resolves(allMatchesMock);
+    sinon.stub(SequelizeMatches, 'findAll').resolves(mock.matches.allMatches as unknown as SequelizeMatches[]);
 
     const { status, body } = await request(app).get('/matches');
 
@@ -32,9 +31,9 @@ describe('App', function () {
   });
 
   it('GET "/matches?inProgress=true" should return all matches in progress', async function () {
-    const inProgressMatchesMock = MatchesModel.bulkBuild(mock.matches.inProgressMatches);
+    const inProgressMatchesMock = SequelizeMatches.bulkBuild(mock.matches.inProgressMatches);
 
-    sinon.stub(MatchesModel, 'findAll').resolves(inProgressMatchesMock);
+    sinon.stub(SequelizeMatches, 'findAll').resolves(inProgressMatchesMock);
 
     const { status, body } = await request(app).get('/matches?inProgress=true');
 
@@ -43,9 +42,9 @@ describe('App', function () {
   });
 
   it('GET "/matches?inProgress=false" should return all matches in progress', async function () {
-    const finishedMatchesMock = MatchesModel.bulkBuild(mock.matches.finishedMatches);
+    const finishedMatchesMock = SequelizeMatches.bulkBuild(mock.matches.finishedMatches);
 
-    sinon.stub(MatchesModel, 'findAll').resolves(finishedMatchesMock);
+    sinon.stub(SequelizeMatches, 'findAll').resolves(finishedMatchesMock);
 
     const { status, body } = await request(app).get('/matches?inProgress=true');
 
@@ -54,9 +53,9 @@ describe('App', function () {
   });
 
   it('PATCH "/matches/:validId/finish" with valid token should message informing that match has been completed', async function () {
-    const matchToEndMock = MatchesModel.build(mock.matches.matchToEnd);
+    const matchToEndMock = SequelizeMatches.build(mock.matches.matchToEnd);
 
-    sinon.stub(MatchesModel, 'findOne').resolves(matchToEndMock);
+    sinon.stub(SequelizeMatches, 'findOne').resolves(matchToEndMock);
 
     const { status, body } = await request(app)
       .patch('/matches/1/finish')
@@ -94,9 +93,9 @@ describe('App', function () {
   });
 
   it('PATCH "/matches/:validId" with valid token should update the scoreboard', async function () {
-    const matchToEndMock = MatchesModel.build(mock.matches.matchToEnd);
+    const matchToEndMock = SequelizeMatches.build(mock.matches.matchToEnd);
 
-    sinon.stub(MatchesModel, 'findOne').resolves(matchToEndMock);
+    sinon.stub(SequelizeMatches, 'findOne').resolves(matchToEndMock);
 
     const { status, body } = await request(app)
       .patch('/matches/1')
@@ -144,11 +143,11 @@ describe('App', function () {
       inProgress: true,
     };
 
-    const mockFoundTeams = TeamsModel.bulkBuild([mocks.teams[7], mocks.teams[15]]);
-    const mockMatchCreated = MatchesModel.build(fullToCreate);
+    const mockFoundTeams = SequelizeTeams.bulkBuild([mocks.teams[7], mocks.teams[15]]);
+    const mockMatchCreated = SequelizeMatches.build(fullToCreate);
 
-    sinon.stub(TeamsModel, 'findAll').resolves(mockFoundTeams);
-    sinon.stub(MatchesModel, 'create').resolves(mockMatchCreated);
+    sinon.stub(SequelizeTeams, 'findAll').resolves(mockFoundTeams);
+    sinon.stub(SequelizeMatches, 'create').resolves(mockMatchCreated);
 
     const { status, body } = await request(app)
       .post('/matches')
@@ -159,9 +158,9 @@ describe('App', function () {
   });
 
   it('POST "/matches" with valid body in the request but the number of existing teams is different from two should return error message', async function () {
-    const mockFoundTeam = TeamsModel.build(mocks.teams[15]);
+    const mockFoundTeam = SequelizeTeams.build(mocks.teams[15]);
 
-    sinon.stub(TeamsModel, 'findAll').resolves([mockFoundTeam]);
+    sinon.stub(SequelizeTeams, 'findAll').resolves([mockFoundTeam]);
 
     const { status, body } = await request(app)
       .post('/matches')
