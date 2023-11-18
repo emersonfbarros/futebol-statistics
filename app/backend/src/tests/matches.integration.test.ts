@@ -158,6 +158,19 @@ describe('App', function () {
     expect(body).to.be.deep.equal(fullToCreate);
   });
 
+  it('POST "/matches" with valid body in the request but the number of existing teams is different from two should return error message', async function () {
+    const mockFoundTeam = TeamsModel.build(mocks.teams[15]);
+
+    sinon.stub(TeamsModel, 'findAll').resolves([mockFoundTeam]);
+
+    const { status, body } = await request(app)
+      .post('/matches')
+      .set('authorization', `Bearer ${mock.login.validToken}`)
+      .send(mock.matches.matchToCreate);
+    expect(status).to.be.equal(mock.httpStatus.notFound);
+    expect(body).to.be.deep.equal({ message: 'There is no team with such id!' });
+  });
+
   it('POST "/matches" with body with teams that have same id in the request should return error message', async function () {
     const { status, body } = await request(app)
       .post('/matches')
