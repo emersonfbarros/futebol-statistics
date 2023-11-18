@@ -134,4 +134,25 @@ describe('App', function () {
     expect(status).to.be.equal(mock.httpStatus.unauthorized);
     expect(body).to.be.deep.equal({ message: invalidTokenMessage });
   });
+
+  it('POST "/matches" with valid body in the request should create new match and returns its data from db', async function () {
+    const fullToCreate = {
+      ...mock.matches.matchToCreate,
+      id: 35,
+      inProgress: true,
+    };
+
+    const mockFoundTeams = TeamsModel.bulkBuild([mocks.teams[7], mocks.teams[15]]);
+    const mockMatchCreated = MatchesModel.build(fullToCreate);
+
+    sinon.stub(TeamsModel, 'findAll').resolves(mockFoundTeams);
+    sinon.stub(MatchesModel, 'create').resolves(mockMatchCreated);
+
+    const { status, body } = await request(app)
+      .post('/matches')
+      .set('authorization', `Bearer ${mock.login.validToken}`)
+      .send(mock.matches.matchToCreate);
+    expect(status).to.be.equal(mock.httpStatus.created);
+    expect(body).to.be.deep.equal(fullToCreate);
+  });
 });

@@ -111,10 +111,17 @@ const scoreboardToUpdate = {
   awayTeamGoals: 1,
 };
 
+const matchToCreate = {
+  homeTeamId: 16,
+  awayTeamId: 8,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2,
+};
 export default {
   allMatches,
   inProgressMatches,
   finishedMatches,
   matchToEnd,
   scoreboardToUpdate,
+  matchToCreate,
 };
