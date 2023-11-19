@@ -2,6 +2,7 @@ import SequelizeMatches from '../database/models/MatchesModel';
 import SequelizeTeams from '../database/models/TeamsModel';
 import IMatch from '../Interfaces/matches/IMatch';
 import IMatchModel from '../Interfaces/matches/IMatchModel';
+import { NewMatchPayload } from '../types/NewMatchPayload';
 import { UpdateScoreboardPayload } from '../types/UpdateScoreboardPayload';
 
 export default class MatchesModel implements IMatchModel {
@@ -29,5 +30,10 @@ export default class MatchesModel implements IMatchModel {
       { homeTeamGoals, awayTeamGoals },
       { where: { id } },
     );
+  }
+
+  async createsMatch(payload: NewMatchPayload): Promise<IMatch> {
+    const createdMatch = await this.model.create({ ...payload, inProgress: true });
+    return createdMatch;
   }
 }
