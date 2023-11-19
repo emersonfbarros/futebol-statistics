@@ -20,4 +20,9 @@ export default class MatchesController {
     const { status, data } = await this.matchesService.updatesScoreboard({ ...body, id });
     res.status(Defaults.getHttpCode(status)).json(data);
   }
+
+  public async createsMatch({ body }: Request, res: Response) {
+    const { status, data } = await this.matchesService.createsMatch(body);
+    res.status(Defaults.getHttpCode(status)).json(data);
+  }
 }
