@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import MatchesController from '../controllers/MatchesController';
+import TokenValidation from '../middlewares/TokenValidation';
 
 export default class MatchesRoutes {
   private router: Router;
@@ -17,6 +18,13 @@ export default class MatchesRoutes {
       '/',
       (req: Request, res: Response) =>
         this.matchesController.getAll(req, res),
+    );
+
+    this.router.patch(
+      '/:id/finish',
+      TokenValidation.validate,
+      (req: Request, res: Response) =>
+        this.matchesController.endsMatch(req, res),
     );
   }
 
