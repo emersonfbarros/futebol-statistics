@@ -5,6 +5,8 @@ export default class Defaults {
     switch (status) {
       case 'SUCCESSFUL':
         return 200;
+      case 'CREATED':
+        return 201;
       case 'SERVER_ERROR':
         return 500;
       case 'NOT_FOUND':
@@ -13,6 +15,8 @@ export default class Defaults {
         return 401;
       case 'BAD_REQ':
         return 400;
+      case 'UNPROCESSABLE':
+        return 422;
       default:
         throw new Error(`Invalid status: ${status}`);
     }
