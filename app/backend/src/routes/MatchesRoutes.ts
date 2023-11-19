@@ -26,6 +26,13 @@ export default class MatchesRoutes {
       (req: Request, res: Response) =>
         this.matchesController.endsMatch(req, res),
     );
+
+    this.router.patch(
+      '/:id',
+      TokenValidation.validate,
+      (req: Request, res: Response) =>
+        this.matchesController.updatesScoreboard(req, res),
+    );
   }
 
   public getRouter() {
