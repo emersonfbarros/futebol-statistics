@@ -16,4 +16,8 @@ export default class MatchesModel implements IMatchModel {
     });
     return matches;
   }
+
+  async endsMatch(id: number): Promise<void> {
+    await this.model.update({ inProgress: false }, { where: { id } });
+  }
 }
