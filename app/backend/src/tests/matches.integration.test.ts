@@ -21,7 +21,6 @@ describe('App', function () {
   });
 
   it('GET "/matches" should return all matches with no filters', async function () {
-
     sinon.stub(SequelizeMatches, 'findAll')
       .resolves(mock.matches.allMatches as unknown as SequelizeMatches[]);
 
@@ -32,9 +31,9 @@ describe('App', function () {
   });
 
   it('GET "/matches?inProgress=true" should return all matches in progress', async function () {
-    const inProgressMatchesMock = SequelizeMatches.bulkBuild(mock.matches.inProgressMatches);
 
-    sinon.stub(SequelizeMatches, 'findAll').resolves(inProgressMatchesMock);
+    sinon.stub(SequelizeMatches, 'findAll')
+      .resolves(mock.matches.inProgressMatches as unknown as SequelizeMatches[]);
 
     const { status, body } = await request(app).get('/matches?inProgress=true');
 
@@ -43,9 +42,9 @@ describe('App', function () {
   });
 
   it('GET "/matches?inProgress=false" should return all matches in progress', async function () {
-    const finishedMatchesMock = SequelizeMatches.bulkBuild(mock.matches.finishedMatches);
 
-    sinon.stub(SequelizeMatches, 'findAll').resolves(finishedMatchesMock);
+    sinon.stub(SequelizeMatches, 'findAll')
+      .resolves(mock.matches.finishedMatches as unknown as SequelizeMatches[]);
 
     const { status, body } = await request(app).get('/matches?inProgress=true');
 
