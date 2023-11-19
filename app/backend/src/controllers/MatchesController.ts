@@ -10,4 +10,9 @@ export default class MatchesController {
       .getAll(inProgress as string | undefined);
     res.status(Defaults.getHttpCode(status)).json(data);
   }
+
+  public async endsMatch({ params: { id } }: Request, res: Response) {
+    const { status, data } = await this.matchesService.endsMatch(Number(id));
+    res.status(Defaults.getHttpCode(status)).json(data);
+  }
 }
