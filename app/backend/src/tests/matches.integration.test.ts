@@ -53,9 +53,9 @@ describe('App', function () {
   });
 
   it('PATCH "/matches/:validId/finish" with valid token should message informing that match has been completed', async function () {
-    const matchToEndMock = SequelizeMatches.build(mock.matches.matchToEnd);
+    // const matchToEndMock = SequelizeMatches.build(mock.matches.matchToEnd);
 
-    sinon.stub(SequelizeMatches, 'findOne').resolves(matchToEndMock);
+    sinon.stub(SequelizeMatches, 'update').resolves([1]);
 
     const { status, body } = await request(app)
       .patch('/matches/1/finish')
