@@ -14,24 +14,21 @@ export default class MatchesRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      '/',
-      (req: Request, res: Response) =>
-        this.matchesController.getAll(req, res),
-    );
-
+    this.router.get('/', (req: Request, res: Response) => this.matchesController.getAll(req, res));
     this.router.patch(
       '/:id/finish',
       TokenValidation.validate,
-      (req: Request, res: Response) =>
-        this.matchesController.endsMatch(req, res),
+      (req: Request, res: Response) => this.matchesController.endsMatch(req, res),
     );
-
     this.router.patch(
       '/:id',
       TokenValidation.validate,
-      (req: Request, res: Response) =>
-        this.matchesController.updatesScoreboard(req, res),
+      (req: Request, res: Response) => this.matchesController.updatesScoreboard(req, res),
+    );
+    this.router.post(
+      '/',
+      TokenValidation.validate,
+      (req: Request, res: Response) => this.matchesController.createsMatch(req, res),
     );
   }
 
