@@ -53,8 +53,6 @@ describe('App', function () {
   });
 
   it('PATCH "/matches/:validId/finish" with valid token should message informing that match has been completed', async function () {
-    // const matchToEndMock = SequelizeMatches.build(mock.matches.matchToEnd);
-
     sinon.stub(SequelizeMatches, 'update').resolves([1]);
 
     const { status, body } = await request(app)
@@ -93,9 +91,7 @@ describe('App', function () {
   });
 
   it('PATCH "/matches/:validId" with valid token should update the scoreboard', async function () {
-    const matchToEndMock = SequelizeMatches.build(mock.matches.matchToEnd);
-
-    sinon.stub(SequelizeMatches, 'findOne').resolves(matchToEndMock);
+    sinon.stub(SequelizeMatches, 'update').resolves([1]);
 
     const { status, body } = await request(app)
       .patch('/matches/1')
@@ -103,7 +99,7 @@ describe('App', function () {
       .send(mock.matches.scoreboardToUpdate);
 
     expect(status).to.be.equal(mock.httpStatus.successful);
-    expect(body).to.be.deep.equal({});
+    expect(body).to.be.deep.equal({ message: 'Scoreboard updated' });
   });
 
   it('PATCH "/matches/:validId" with invalid token should return error message', async function () {
