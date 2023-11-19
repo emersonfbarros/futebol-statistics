@@ -177,7 +177,7 @@ describe('App', function () {
 
   it('POST "/matches" with invalid token should return error message', async function () {
     const { status, body } = await request(app)
-      .patch('/matches')
+      .post('/matches')
       .set('authorization', `Bearer ${mock.login.invalidToken}`)
       .send(mock.matches.matchToCreate);
 
