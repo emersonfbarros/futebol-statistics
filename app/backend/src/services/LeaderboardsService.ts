@@ -9,16 +9,21 @@ type TeamStats = {
   totalVictories: number;
   totalDraws: number;
   totalLosses: number;
-  goalsFavor: number;
-  goalsOwn: number;
+  goalsFavor: number; goalsOwn: number;
   goalsBalance: number;
   efficiency: number;
 };
 
-type dataToModel = {
+type TeamsTypes = {
+  main: 'homeTeam' | 'awayTeam';
+  sub: 'homeTeam' | 'awayTeam';
+};
+
+type calcInfo = {
   name: string;
   baseStats: TeamStats;
   matches: IMatchWithTeamsNames[];
+  teams: TeamsTypes
 };
 
 export default class LeaderboardService {
@@ -36,40 +41,68 @@ export default class LeaderboardService {
     efficiency: 0,
   };
 
-  private static modelTeamStats({ name, baseStats, matches }: dataToModel): Promise<TeamStats> {
+  private static whichTeam(typeTeam: 'home' | 'away') {
+    const team: TeamsTypes = {
+      main: typeTeam === 'home' ? 'homeTeam' : 'awayTeam',
+      sub: typeTeam === 'home' ? 'awayTeam' : 'homeTeam',
+    };
+    return team;
+  }
+
+  private static calcStats(inf: calcInfo): Promise<TeamStats> {
     return new Promise((resolve) => {
-      const tStats: TeamStats = { ...baseStats };
-      matches.forEach((match) => {
-        if (match.homeTeam.teamName === name) {
-          tStats.name = name;
-          tStats.totalGames += 1;
-          tStats.totalVictories += match.homeTeamGoals > match.awayTeamGoals ? 1 : 0;
-          tStats.totalDraws += match.homeTeamGoals === match.awayTeamGoals ? 1 : 0;
-          tStats.totalLosses += match.homeTeamGoals < match.awayTeamGoals ? 1 : 0;
-          tStats.goalsFavor += match.homeTeamGoals;
-          tStats.goalsOwn += match.awayTeamGoals;
+      const s: TeamStats = { ...inf.baseStats };
+      inf.matches.forEach((m) => {
+        if (m[inf.teams.main].teamName === inf.name) {
+          s.name = inf.name;
+          s.totalGames += 1;
+          s.totalVictories += m[`${inf.teams.main}Goals`] > m[`${inf.teams.sub}Goals`] ? 1 : 0;
+          s.totalDraws += m[`${inf.teams.main}Goals`] === m[`${inf.teams.sub}Goals`] ? 1 : 0;
+          s.totalLosses += m[`${inf.teams.main}Goals`] < m[`${inf.teams.sub}Goals`] ? 1 : 0;
+          s.goalsFavor += m[`${inf.teams.main}Goals`];
+          s.goalsOwn += m[`${inf.teams.sub}Goals`];
         }
       });
-      tStats.totalPoints += (tStats.totalVictories * 3) + tStats.totalDraws;
-      tStats.goalsBalance += tStats.goalsFavor - tStats.goalsOwn;
-      tStats.efficiency += +((tStats.totalPoints / (tStats.totalGames * 3)) * 100).toFixed(2);
-      resolve(tStats);
+      s.totalPoints += (s.totalVictories * 3) + s.totalDraws;
+      s.goalsBalance += s.goalsFavor - s.goalsOwn;
+      s.efficiency += +((s.totalPoints / (s.totalGames * 3)) * 100).toFixed(2);
+      resolve(s);
     });
   }
 
-  public async getHomeTeamsStats(): Promise<ServiceResponse<TeamStats[]>> {
-    const matches = await this.matchesModel.findAll('false');
-    const homeTeamsNamesSet: Set<string> = new Set();
-    matches.forEach(({ homeTeam }) => { homeTeamsNamesSet.add(homeTeam.teamName); });
-    const performancePromises = Array.from(homeTeamsNamesSet).map((name) =>
-      LeaderboardService.modelTeamStats({ name, baseStats: this.initialStats, matches }));
-    const consolidateStats = await Promise.all(performancePromises);
-    consolidateStats.sort((a, b) => {
-      if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
-      if (b.totalVictories !== a.totalVictories) return b.totalVictories - a.totalVictories;
-      if (b.goalsBalance !== a.goalsBalance) return b.goalsBalance - a.goalsBalance;
+  private static sortTeamsByStatus(teamsStatus: TeamStats[]): TeamStats[] {
+    teamsStatus.sort((a, b) => {
+      if (b.totalPoints !== a.totalPoints) {
+        return b.totalPoints - a.totalPoints;
+      }
+      if (b.totalVictories !== a.totalVictories) {
+        return b.totalVictories - a.totalVictories;
+      }
+      if (b.goalsBalance !== a.goalsBalance) {
+        return b.goalsBalance - a.goalsBalance;
+      }
       return b.goalsFavor - a.goalsFavor;
     });
-    return { status: 'SUCCESSFUL', data: consolidateStats };
+    return teamsStatus;
+  }
+
+  public async getTeamsStats(teamType: string): Promise<ServiceResponse<TeamStats[]>> {
+    if (teamType !== 'home' && teamType !== 'away') {
+      return { status: 'NOT_FOUND', data: { message: 'Route not found' } };
+    }
+
+    const matches = await this.matchesModel.findAll('false');
+
+    const teamsNamesSet: Set<string> = new Set();
+    matches.forEach((match) => { teamsNamesSet.add(match[`${teamType}Team`].teamName); });
+
+    const teams = LeaderboardService.whichTeam(teamType);
+
+    const statsPromises = Array.from(teamsNamesSet).map((name) =>
+      LeaderboardService.calcStats({ name, baseStats: this.initialStats, matches, teams }));
+    const consolidateStats = await Promise.all(statsPromises);
+
+    const sortedStats = LeaderboardService.sortTeamsByStatus(consolidateStats);
+    return { status: 'SUCCESSFUL', data: sortedStats };
   }
 }
