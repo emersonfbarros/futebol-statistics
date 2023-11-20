@@ -1,6 +1,6 @@
 import SequelizeMatches from '../database/models/MatchesModel';
 import SequelizeTeams from '../database/models/TeamsModel';
-import IMatch from '../Interfaces/matches/IMatch';
+import IMatch, { IMatchWithTeamsNames } from '../Interfaces/matches/IMatch';
 import IMatchModel from '../Interfaces/matches/IMatchModel';
 import { NewMatchPayload } from '../types/NewMatchPayload';
 import { UpdateScoreboardPayload } from '../types/UpdateScoreboardPayload';
@@ -8,14 +8,14 @@ import { UpdateScoreboardPayload } from '../types/UpdateScoreboardPayload';
 export default class MatchesModel implements IMatchModel {
   private model = SequelizeMatches;
 
-  async findAll(q: string | undefined): Promise<IMatch[]> {
+  async findAll(q: string | undefined): Promise<IMatchWithTeamsNames[]> {
     const matches = await this.model.findAll({
-      where: q ? { inProgress: q === 'true' } : undefined,
+      where: (q === 'true' || q === 'false') ? { inProgress: q === 'true' } : undefined,
       include: [
         { model: SequelizeTeams, as: 'homeTeam', attributes: ['teamName'] },
         { model: SequelizeTeams, as: 'awayTeam', attributes: ['teamName'] },
       ],
-    });
+    }) as unknown as IMatchWithTeamsNames[];
     return matches;
   }
 
