@@ -3,10 +3,10 @@ import LeaderboardService from '../services/LeaderboardsService';
 import Defaults from '../utils/Defaults';
 
 export default class LeaderboadsController {
-  private leaderboardsSerice = new LeaderboardService();
+  private leaderboardsService = new LeaderboardService();
 
-  public async getHomeTeamPerformance(_req: Request, res: Response) {
-    const { status, data } = await this.leaderboardsSerice.getHomeTeamsStats();
+  public async getHomeTeamPerformance({ params: { teamType } }: Request, res: Response) {
+    const { status, data } = await this.leaderboardsService.getTeamsStats(teamType);
     res.status(Defaults.getHttpCode(status)).json(data);
   }
 }
