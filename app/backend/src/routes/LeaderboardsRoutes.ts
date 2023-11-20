@@ -13,7 +13,7 @@ export default class LeaderboardRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get('/home', (req: Request, res: Response) =>
+    this.router.get('/:teamType', (req: Request, res: Response) =>
       this.leaderboardController.getHomeTeamPerformance(req, res));
   }
 
