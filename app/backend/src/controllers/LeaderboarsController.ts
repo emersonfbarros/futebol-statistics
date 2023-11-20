@@ -6,7 +6,7 @@ export default class LeaderboadsController {
   private leaderboardsSerice = new LeaderboardService();
 
   public async getHomeTeamPerformance(_req: Request, res: Response) {
-    const { status, data } = await this.leaderboardsSerice.getHomeTeamsPerformance();
+    const { status, data } = await this.leaderboardsSerice.getHomeTeamsStats();
     res.status(Defaults.getHttpCode(status)).json(data);
   }
 }
