@@ -1,4 +1,4 @@
-import IMatch from '../Interfaces/matches/IMatch';
+import IMatch, { IMatchWithTeamsNames } from '../Interfaces/matches/IMatch';
 import MatchesModel from '../models/MatchesModel';
 import TeamsModel from '../models/TeamsModel';
 import { NewMatchPayload } from '../types/NewMatchPayload';
@@ -9,7 +9,7 @@ export default class MatchesService {
   private matchesModel = new MatchesModel();
   private teamsModel = new TeamsModel();
 
-  public async getAll(q: string | undefined): Promise<ServiceResponse<IMatch[]>> {
+  public async getAll(q: string | undefined): Promise<ServiceResponse<IMatchWithTeamsNames[]>> {
     const matches = await this.matchesModel.findAll(q);
     return { status: 'SUCCESSFUL', data: matches };
   }
